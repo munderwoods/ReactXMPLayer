@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import SongHeading from './../SongHeading.js';
-import Modplayer from './../ft2/player.js';
-import Player from './../Player.js';
+import SongHeading from './../components/App/SongHeading.js';
+import Modplayer from './../components/App/ft2/player.js';
+import Player from './../components/App/Player.js';
 
   let XMPlayer = new Modplayer();
 class PlayerContainer extends Component {
@@ -25,7 +25,7 @@ class PlayerContainer extends Component {
 
   next = function () {
     XMPlayer.autostart = true;
-    XMPlayer.load('http://localhost:3000/src/songs/Ota.xm')
+    XMPlayer.load('http://localhost:3000/songs/Ota.xm')
     console.log(XMPlayer);
     const index = this.props.songs.findIndex(i => i === this.state.currentSong);
     if (index === this.props.songs.length - 1) {
