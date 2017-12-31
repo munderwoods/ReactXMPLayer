@@ -1,4 +1,4 @@
-import Fasttracker from './ft2.js';
+import Fasttracker from './ft2';
 /* eslint-disable */
 /*
   front end wrapper class for format-specific player classes
@@ -6,20 +6,21 @@ import Fasttracker from './ft2.js';
 */
 
 // helper functions for picking up signed, unsigned, little endian, etc from an unsigned 8-bit buffer
-function le_word(buffer, offset) {
+export function le_word(buffer, offset) {
   return buffer[offset]|(buffer[offset+1]<<8);
 }
-function le_dword(buffer, offset) {
+export function le_dword(buffer, offset) {
   return buffer[offset]|(buffer[offset+1]<<8)|(buffer[offset+2]<<16)|(buffer[offset+3]<<24);
 }
-function s_byte(buffer, offset) {
+export function s_byte(buffer, offset) {
   return (buffer[offset]<128)?buffer[offset]:(buffer[offset]-256);
 }
-function s_le_word(buffer, offset) {
+export function s_le_word(buffer, offset) {
   return (le_word(buffer,offset)<32768)?le_word(buffer,offset):(le_word(buffer,offset)-65536);
 }
+
 // convert from MS-DOS extended ASCII to Unicode
-function dos2utf(c) {
+export function dos2utf(c) {
   if (c<128) return String.fromCharCode(c);
   var cs=[
     0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0, 0x00e5, 0x00e7, 0x00ea, 0x00eb, 0x00e8, 0x00ef, 0x00ee, 0x00ec, 0x00c4, 0x00c5,
@@ -144,11 +145,11 @@ Modplayer.prototype.load = function(url)
       asset.filter=asset.player.filter;
       asset.mixval=asset.player.mixval; // usually 8.0, though
       asset.samplenames=new Array(32)
-      for(var i=0;i<32;i++) asset.samplenames[i]="";
+      for(let i=0;i<32;i++) asset.samplenames[i]="";
       if (asset.format=='xm' || asset.format=='it') {
-        for(i=0;i<asset.player.instrument.length;i++) asset.samplenames[i]=asset.player.instrument[i].name;
+        for(let i=0;i<asset.player.instrument.length;i++) asset.samplenames[i]=asset.player.instrument[i].name;
       } else {
-        for(i=0;i<asset.player.sample.length;i++) asset.samplenames[i]=asset.player.sample[i].name;
+        for(let i=0;i<asset.player.sample.length;i++) asset.samplenames[i]=asset.player.sample[i].name;
       }
 
       asset.state="ready.";
@@ -222,7 +223,7 @@ Modplayer.prototype.play = function()
     this.playing=true;
 
     this.chvu=new Float32Array(this.player.channels);
-    for(var i=0;i<this.player.channels;i++) this.chvu[i]=0.0;
+    for(let i=0;i<this.player.channels;i++) this.chvu[i]=0.0;
 
     this.onPlay();
 
@@ -516,7 +517,7 @@ Modplayer.prototype.mix = function(ape) {
 
       // a more headphone-friendly stereo separation
       if (mod.separation) {
-        t=outp[0];
+        let t=outp[0];
         if (mod.separation==2) { // mono
           outp[0]=outp[0]*0.5 + outp[1]*0.5;
           outp[1]=outp[1]*0.5 + t*0.5;

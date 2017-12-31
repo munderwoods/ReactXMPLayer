@@ -1,3 +1,4 @@
+import { le_word, le_dword, s_le_word, s_byte, dos2utf } from './player';
 /* eslint-disable */
 /*
   fast tracker 2 module player for web audio api
@@ -145,7 +146,7 @@ Fasttracker.prototype.clearsong = function()
   this.initBPM=125;
 
   this.patterntable=new ArrayBuffer(256);
-  for(var i=0;i<256;i++) this.patterntable[i]=0;
+  for(i=0;i<256;i++) this.patterntable[i]=0;
 
   this.pattern=new Array();
   this.instrument=new Array(this.instruments);
@@ -161,35 +162,6 @@ Fasttracker.prototype.clearsong = function()
 
 
 // initialize all player variables to defaults prior to starting playback
-
-Fasttracker.prototype.le_word = function (buffer, offset) {
-  return buffer[offset]|(buffer[offset+1]<<8);
-}
-Fasttracker.prototype.le_dword = function (buffer, offset) {
-  return buffer[offset]|(buffer[offset+1]<<8)|(buffer[offset+2]<<16)|(buffer[offset+3]<<24);
-}
-Fasttracker.prototype.s_byte = function (buffer, offset) {
-  return (buffer[offset]<128)?buffer[offset]:(buffer[offset]-256);
-}
-Fasttracker.prototype.s_le_word = function (buffer, offset) {
-  return (le_word(buffer,offset)<32768)?le_word(buffer,offset):(le_word(buffer,offset)-65536);
-}
-// convert from MS-DOS extended ASCII to Unicode
-Fasttracker.prototype.dos2utf = function (c) {
-  if (c<128) return String.fromCharCode(c);
-  var cs=[
-    0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x00e0, 0x00e5, 0x00e7, 0x00ea, 0x00eb, 0x00e8, 0x00ef, 0x00ee, 0x00ec, 0x00c4, 0x00c5,
-    0x00c9, 0x00e6, 0x00c6, 0x00f4, 0x00f6, 0x00f2, 0x00fb, 0x00f9, 0x00ff, 0x00d6, 0x00dc, 0x00f8, 0x00a3, 0x00d8, 0x00d7, 0x0192,
-    0x00e1, 0x00ed, 0x00f3, 0x00fa, 0x00f1, 0x00d1, 0x00aa, 0x00ba, 0x00bf, 0x00ae, 0x00ac, 0x00bd, 0x00bc, 0x00a1, 0x00ab, 0x00bb,
-    0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x00c1, 0x00c2, 0x00c0, 0x00a9, 0x2563, 0x2551, 0x2557, 0x255d, 0x00a2, 0x00a5, 0x2510,
-    0x2514, 0x2534, 0x252c, 0x251c, 0x2500, 0x253c, 0x00e3, 0x00c3, 0x255a, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550, 0x256c, 0x00a4,
-    0x00f0, 0x00d0, 0x00ca, 0x00cb, 0x00c8, 0x0131, 0x00cd, 0x00ce, 0x00cf, 0x2518, 0x250c, 0x2588, 0x2584, 0x00a6, 0x00cc, 0x2580,
-    0x00d3, 0x00df, 0x00d4, 0x00d2, 0x00f5, 0x00d5, 0x00b5, 0x00fe, 0x00de, 0x00da, 0x00db, 0x00d9, 0x00fd, 0x00dd, 0x00af, 0x00b4,
-    0x00ad, 0x00b1, 0x2017, 0x00be, 0x00b6, 0x00a7, 0x00f7, 0x00b8, 0x00b0, 0x00a8, 0x00b7, 0x00b9, 0x00b3, 0x00b2, 0x25a0, 0x00a0
-  ];
-  return String.fromCharCode(cs[c-128]);
-}
-
 Fasttracker.prototype.initialize = function()
 {
   this.syncqueue=[];
@@ -284,25 +256,25 @@ Fasttracker.prototype.parse = function(buffer)
   if (this.signature != "Extended Module: ") return false;
   if (buffer[37] != 0x1a) return false;
   this.signature="X.M.";
-  this.trackerversion=this.le_word(buffer, 58);
+  this.trackerversion=le_word(buffer, 58);
   if (this.trackerversion < 0x0104) return false; // older versions not currently supported
 
   // song title
   i=0;
-  while(buffer[i] && i<20) this.title+=this.dos2utf(buffer[17+i++]);
+  while(buffer[i] && i<20) this.title+=dos2utf(buffer[17+i++]);
 
   offset=60;
-  hdrlen=this.le_dword(buffer, offset);
-  this.songlen=this.le_word(buffer, offset+4);
-  this.repeatpos=this.le_word(buffer, offset+6);
-  this.channels=this.le_word(buffer, offset+8);
-  this.patterns=this.le_word(buffer, offset+10);
-  this.instruments=this.le_word(buffer, offset+12);
+  hdrlen=le_dword(buffer, offset);
+  this.songlen=le_word(buffer, offset+4);
+  this.repeatpos=le_word(buffer, offset+6);
+  this.channels=le_word(buffer, offset+8);
+  this.patterns=le_word(buffer, offset+10);
+  this.instruments=le_word(buffer, offset+12);
 
-  this.amigaperiods=(!this.le_word(buffer, offset+14))&1;
+  this.amigaperiods=(!le_word(buffer, offset+14))&1;
 
-  this.initSpeed=this.le_word(buffer, offset+16);
-  this.initBPM=this.le_word(buffer, offset+18);
+  this.initSpeed=le_word(buffer, offset+16);
+  this.initBPM=le_word(buffer, offset+18);
 
   var maxpatt=0;
   for(i=0;i<256;i++) {
@@ -319,12 +291,12 @@ Fasttracker.prototype.parse = function(buffer)
     // initialize the pattern to defaults prior to unpacking
     this.patternlen[i]=64;
     this.pattern[i]=new Uint8Array(this.channels*this.patternlen[i]*5);
-    for(this.row=0;this.row<this.patternlen[i];this.row++) for(this.ch=0;this.ch<this.ch;this.ch++) {
-      this.pattern[i][this.row*this.channels*5 + this.ch*5 + 0]=255; // note (255=no note)
-      this.pattern[i][this.row*this.channels*5 + this.ch*5 + 1]=0; // instrument
-      this.pattern[i][this.row*this.channels*5 + this.ch*5 + 2]=255 // volume
-      this.pattern[i][this.row*this.channels*5 + this.ch*5 + 3]=255; // command
-      this.pattern[i][this.row*this.channels*5 + this.ch*5 + 4]=0; // parameter
+    for(let row=0;row<this.patternlen[i];row++) for(let ch=0;ch<this.channels;ch++) {
+      this.pattern[i][row*this.channels*5 + ch*5 + 0]=255; // note (255=no note)
+      this.pattern[i][row*this.channels*5 + ch*5 + 1]=0; // instrument
+      this.pattern[i][row*this.channels*5 + ch*5 + 2]=255 // volume
+      this.pattern[i][row*this.channels*5 + ch*5 + 3]=255; // command
+      this.pattern[i][row*this.channels*5 + ch*5 + 4]=0; // parameter
     }
   }
 
@@ -332,7 +304,7 @@ Fasttracker.prototype.parse = function(buffer)
   offset+=hdrlen; // initial offset for patterns
   i=0;
   while(i<this.patterns) {
-    this.patternlen[i]=this.le_word(buffer, offset+5);
+    this.patternlen[i]=le_word(buffer, offset+5);
     this.pattern[i]=new Uint8Array(this.channels*this.patternlen[i]*5);
 
     // initialize pattern to defaults prior to unpacking
@@ -344,8 +316,8 @@ Fasttracker.prototype.parse = function(buffer)
       this.pattern[i][k*5 + 4]=0; // parameter
     }
 
-    datalen=this.le_word(buffer, offset+7);
-    offset+=this.le_dword(buffer, offset); // jump over header
+    datalen=le_word(buffer, offset+7);
+    offset+=le_dword(buffer, offset); // jump over header
     j=0; k=0;
     while(j<datalen) {
       c=buffer[offset+j++];
@@ -396,14 +368,14 @@ Fasttracker.prototype.parse = function(buffer)
   this.instrument=new Array(this.instruments);
   i=0;
   while(i<this.instruments) {
-    hdrlen=this.le_dword(buffer, offset);
+    hdrlen=le_dword(buffer, offset);
     this.instrument[i]=new Object();
     this.instrument[i].sample=new Array();
     this.instrument[i].name="";
     j=0;
     while(buffer[offset+4+j] && j<22)
-      this.instrument[i].name+=this.dos2utf(buffer[offset+4+j++]);
-    this.instrument[i].samples=this.le_word(buffer, offset+27);
+      this.instrument[i].name+=dos2utf(buffer[offset+4+j++]);
+    this.instrument[i].samples=le_word(buffer, offset+27);
 
     // initialize to defaults
     this.instrument[i].samplemap=new Uint8Array(96);
@@ -422,7 +394,7 @@ Fasttracker.prototype.parse = function(buffer)
     }
 
     if (this.instrument[i].samples) {
-      var smphdrlen=this.le_dword(buffer, offset+29);
+      var smphdrlen=le_dword(buffer, offset+29);
 
       for(j=0;j<96;j++) this.instrument[i].samplemap[j]=buffer[offset+33+j];
 
@@ -433,8 +405,8 @@ Fasttracker.prototype.parse = function(buffer)
       var tmp_volenv=new Array(12);
       var tmp_panenv=new Array(12);
       for(j=0;j<12;j++) {
-        tmp_volenv[j]=new Uint16Array([this.le_word(buffer, offset+129+j*4), this.le_word(buffer, offset+129+j*4+2)]);
-        tmp_panenv[j]=new Uint16Array([this.le_word(buffer, offset+177+j*4), this.le_word(buffer, offset+177+j*4+2)]);
+        tmp_volenv[j]=new Uint16Array([le_word(buffer, offset+129+j*4), le_word(buffer, offset+129+j*4+2)]);
+        tmp_panenv[j]=new Uint16Array([le_word(buffer, offset+177+j*4), le_word(buffer, offset+177+j*4+2)]);
       }
 
       // are envelopes enabled?
@@ -487,13 +459,13 @@ Fasttracker.prototype.parse = function(buffer)
       this.instrument[i].vibratorate=buffer[offset+238];
 
       // volume fade out
-      this.instrument[i].volfadeout=this.le_word(buffer, offset+239);
+      this.instrument[i].volfadeout=le_word(buffer, offset+239);
 
       // sample headers
       offset+=hdrlen;
       this.instrument[i].sample=new Array(this.instrument[i].samples);
       for(j=0;j<this.instrument[i].samples;j++) {
-        datalen=this.le_dword(buffer, offset+0);
+        datalen=le_dword(buffer, offset+0);
 
         this.instrument[i].sample[j]=new Object();
         this.instrument[i].sample[j].bits=(buffer[offset+14]&16)?16:8;
@@ -502,8 +474,8 @@ Fasttracker.prototype.parse = function(buffer)
 
         // sample length and loop points are in BYTES even for 16-bit samples!
         this.instrument[i].sample[j].length=datalen / this.instrument[i].sample[j].bps;
-        this.instrument[i].sample[j].loopstart=this.le_dword(buffer, offset+4) / this.instrument[i].sample[j].bps;
-        this.instrument[i].sample[j].looplength=this.le_dword(buffer, offset+8) / this.instrument[i].sample[j].bps;
+        this.instrument[i].sample[j].loopstart=le_dword(buffer, offset+4) / this.instrument[i].sample[j].bps;
+        this.instrument[i].sample[j].looplength=le_dword(buffer, offset+8) / this.instrument[i].sample[j].bps;
         this.instrument[i].sample[j].loopend=this.instrument[i].sample[j].loopstart+this.instrument[i].sample[j].looplength;
         this.instrument[i].sample[j].looptype=buffer[offset+14]&0x03;
 
@@ -524,7 +496,7 @@ Fasttracker.prototype.parse = function(buffer)
         this.instrument[i].sample[j].panning=buffer[offset+15];
 
         k=0; this.instrument[i].sample[j].name="";
-        while(buffer[offset+18+k] && k<22) this.instrument[i].sample[j].name+=this.dos2utf(buffer[offset+18+k++]);
+        while(buffer[offset+18+k] && k<22) this.instrument[i].sample[j].name+=dos2utf(buffer[offset+18+k++]);
 
         offset+=smphdrlen;
       }
@@ -535,14 +507,14 @@ Fasttracker.prototype.parse = function(buffer)
         c=0;
         if (this.instrument[i].sample[j].bits==16) {
           for(k=0;k<this.instrument[i].sample[j].length;k++) {
-            c+=this.s_le_word(buffer, offset+k*2);
+            c+=s_le_word(buffer, offset+k*2);
             if (c<-32768) c+=65536;
             if (c>32767) c-=65536;
             this.instrument[i].sample[j].data[k]=c/32768.0;
           }
         } else {
           for(k=0;k<this.instrument[i].sample[j].length;k++) {
-            c+=this.s_byte(buffer, offset+k);
+            c+=s_byte(buffer, offset+k);
             if (c<-128) c+=256;
             if (c>127) c-=256;
             this.instrument[i].sample[j].data[k]=c/128.0;
@@ -761,8 +733,8 @@ Fasttracker.prototype.process_tick = function(mod) {
         mod.process_note(mod, p, ch);
       }
     }
-    var i=mod.channel[ch].instrument;
-    si=mod.channel[ch].sampleindex;
+    let i=mod.channel[ch].instrument;
+    let si=mod.channel[ch].sampleindex;
 
     // kill empty instruments
     if (mod.channel[ch].noteon && !mod.instrument[i].samples) {
@@ -1041,7 +1013,7 @@ Fasttracker.prototype.mix = function(mod, bufs, buflen) {
     }
 
     // done - store to output buffer
-    t=mod.volume/64.0;
+    let t=mod.volume/64.0;
     bufs[0][s]=outp[0]*t;
     bufs[1][s]=outp[1]*t
     mod.stt--;
@@ -1488,4 +1460,5 @@ Fasttracker.prototype.effect_t1_ee=function(mod, ch) { // ee
 }
 Fasttracker.prototype.effect_t1_ef=function(mod, ch) { // ef
 }
+
 export default Fasttracker;
