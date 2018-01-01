@@ -3,43 +3,52 @@ import SongHeading from './../components/App/SongHeading.js';
 import Modplayer from './../components/App/ft2/player.js';
 import Player from './../components/App/Player.js';
 
-  let XMPlayer = new Modplayer();
+let XMPlayer = new Modplayer();
 class PlayerContainer extends Component {
   constructor(props) {
     super(props);
+    this.play = this.play.bind(this);
+    this.stop = this.stop.bind(this);
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
-    this.state = {
-      currentSong: this.props.songs[0]
-    };
   };
 
-  previous = function () {
-    const index = this.props.songs.findIndex(i => i === this.state.currentSong);
+  play() {
+    XMPlayer.autostart = true;
+    XMPlayer.load('http://localhost:3000/songs/Ota.xm');
+  }
+
+  stop() {
+    XMPlayer.stop();
+  }
+
+  previous() {
+    const index = this.props.songs.findIndex(i => i === this.props.currentSong);
     if (index === 0) {
-      this.setState({currentSong: this.props.songs[this.props.songs.length - 1]});
+      let newSong = this.props.songs[this.props.songs.length - 1];
+      this.props.setSongFromPlayer(newSong);
     } else {
-        this.setState({currentSong: this.props.songs[index - 1]});
+      let newSong = this.props.songs[index - 1];
+      this.props.setSongFromPlayer(newSong);
     };
   }
 
-  next = function () {
-    XMPlayer.autostart = true;
-    XMPlayer.load('http://localhost:3000/songs/Ota.xm')
-    console.log(XMPlayer);
-    const index = this.props.songs.findIndex(i => i === this.state.currentSong);
+  next() {
+    const index = this.props.songs.findIndex(i => i === this.props.currentSong);
     if (index === this.props.songs.length - 1) {
-      this.setState({currentSong: this.props.songs[0]});
+      let newSong = this.props.songs[0];
+      this.props.setSongFromPlayer(newSong);
     } else {
-        this.setState({currentSong: this.props.songs[index + 1]});
+      let newSong = this.props.songs[index + 1];
+      this.props.setSongFromPlayer(newSong);
     };
   };
 
   render() {
     return (
       <div>
-        <SongHeading title={this.state.currentSong} />
-        <Player currentSong={this.state.currentSong} next={this.next} previous={this.previous} />
+        <SongHeading title={this.props.currentSong} />
+        <Player currentSong={this.props.currentSong} play={this.play} stop={this.stop} next={this.next} previous={this.previous} />
       </div>
     );
   }

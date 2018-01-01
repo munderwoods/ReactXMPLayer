@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
 const bodyParser = require('body-parser')
+const cors = require('cors');
 
 const app = express();
 
@@ -18,9 +19,12 @@ app.use('/songs', express.static(path.resolve(__dirname, '..', 'public/songs')))
 // Serve our api
 .use('/api', require('./api'))
 
-// Always return the main index.html, so react-router render the route in the client
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+
+app.use(cors())
+
+
+app.post('/songListItem/,', function (req, res)  {
+  console.log('works');
 });
 
 module.exports = app;
