@@ -1,12 +1,16 @@
 const db = require('../db') //this is required
 const songs = require('../db/models/songs');
-const Review = require('../db/models/review');
 
 const router = require('express').Router()
 
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('reactxmplayer', 'postgres', null, {
+  host: 'localhost',
+  dialect: 'postgres',
+});
+
 router.get('/', function(req, res, next) {
     songs.findAll({
-            include: [Review]
         })
         .then(result => {
             res.status(200).send(result);
@@ -14,15 +18,16 @@ router.get('/', function(req, res, next) {
         .catch(next);
 });
 
-router.get('/:id', function(req, res, next) {
-    songs.findOne({
-            where:{id:req.params.id},
-            include: [Review]
+router.post('/upload', function(req, res, next) {
+  sequelize
+    .authenticate()
+    .then(() => {
+          console.log('Connection has been established successfully.');
         })
-        .then(result => {
-            res.status(200).send(result);
-        })
-        .catch(next);
+    .catch(err => {
+          console.error('Unable to connect to the database:', err);
+        });
 });
+
 
 module.exports = router

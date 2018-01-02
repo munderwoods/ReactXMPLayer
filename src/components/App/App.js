@@ -31,14 +31,16 @@ class App extends Component {
   render() {
     return (
       <div class="col s12 m2" className = "App">
-          <p class="z-depth-2">
+          <div class="z-depth-2">
 				<div style={{padding: '5%'}}>
         <h1>Play A Jam!</h1>
         <PlayerContainer currentSong={this.state.currentSong} songs={this.state.songs} setSongFromPlayer={this.setSongFromPlayer}/>
+        <br />
         <Library setSongFromLibrary= {this.setSongFromLibrary} songs={this.state.songs}/>
+        <br />
         <UploadForm />
 				</div>
-        </p>
+        </div>
       </div>
     );
   }

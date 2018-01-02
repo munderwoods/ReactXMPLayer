@@ -4,10 +4,9 @@ import React, { Component } from 'react';
 
 class Library extends Component {
 
-
   listItems = this.props.songs.map((song) =>
-    <li style={{flex: 1, flexDirection: 'row'}} key={song}>
-			<a class="collection-item"
+    <li class="flex-row" key={song}>
+			<a style={{width: '100%'}}class="collection-item"
 				href="/songListItem/"
 				onClick={this.clicked.bind(this)}
 				>{song}
@@ -30,7 +29,7 @@ class Library extends Component {
 	render () {
 		return (
 			<div>
-        <h2>Pick A Song From The Library</h2>
+        <h4>Pick A Song From The Library</h4>
         <ul class="collection" style={{listStyle: 'none'}}>{this.listItems}</ul>
 			</div>
 		);
