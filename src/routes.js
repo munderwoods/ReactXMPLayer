@@ -10,6 +10,7 @@ const Routes = () => {
       <div>
         <Route exact path="/" component={App} />
         <Route exact path="/about" component={About} />
+        <Route exact path="/upload" component={About} />
       </div>
     </Router>
   )

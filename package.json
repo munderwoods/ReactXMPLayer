@@ -10,6 +10,7 @@
     "cors": "^2.8.4",
     "debug": "^3.1.0",
     "express": "^4.16.2",
+    "materialize-css": "^0.100.2",
     "morgan": "^1.9.0",
     "nodemon": "^1.14.6",
     "pg": "^7.4.0",
@@ -26,7 +27,7 @@
     "yargs": "^10.0.3"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start\" \"nodemon server\"",
+    "start": "concurrently \"react-scripts start\" \"nodemon server/index.js\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",

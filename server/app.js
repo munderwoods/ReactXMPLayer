@@ -14,17 +14,21 @@ app.use(bodyParser.urlencoded({ extended: false }))
 //json parser
 app.use(bodyParser.json())
 // Serve static assets
-app.use(express.static(path.resolve(__dirname, '..', 'build')))
+
+
 app.use('/songs', express.static(path.resolve(__dirname, '..', 'public/songs')))
+app.use(express.static(path.resolve(__dirname, '..', 'build')))
 // Serve our api
-.use('/api', require('./api'))
+app.use('/api', require('./api'))
 
 
+/*
+app.use('/upload/,', function (req, res)  {
+  console.log('works');
+});
+*/
 app.use(cors())
 
 
-app.post('/songListItem/,', function (req, res)  {
-  console.log('works');
-});
 
 module.exports = app;
