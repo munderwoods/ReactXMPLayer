@@ -1,7 +1,8 @@
 const db = require('../db') //this is required
-const songs = require('../db/models/songs');
+const SongsModel = require('../db/models/songs');
 
 const router = require('express').Router()
+const Busboy = require('busboy');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('reactxmplayer', 'postgres', null, {
@@ -9,24 +10,38 @@ const sequelize = new Sequelize('reactxmplayer', 'postgres', null, {
   dialect: 'postgres',
 });
 
-router.get('/', function(req, res, next) {
-    songs.findAll({
-        })
-        .then(result => {
-            res.status(200).send(result);
-        })
-        .catch(next);
-});
-
-router.post('/upload', function(req, res, next) {
+router.get('/songnames', function(req, res) {
+  let data = [];
   sequelize
     .authenticate()
     .then(() => {
-          console.log('Connection has been established successfully.');
-        })
+      SongsModel.findAll().then(songs => {
+        res.send(songs);
+      });
+    });
+})
+
+router.post('/upload', function(req, res) {
+	const busboy = new Busboy({headers: req.headers });
+	busboy.on('file', function(file, filename,) {
+		console.log(file, filename);
+	});
+	busboy.on('finish', function() {
+		console.log(file, filename)
+	});
+  console.log(req.files);
+	console.log(req.body);
+  sequelize
+    .authenticate()
+    .then(() => {
+      return SongsModel.create({
+        fileName: req.files[0],
+      });
+
+    })
     .catch(err => {
-          console.error('Unable to connect to the database:', err);
-        });
+      console.error('Unable to connect to the database:', err);
+    });
 });
 
 

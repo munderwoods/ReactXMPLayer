@@ -4,8 +4,16 @@ import UploadForm from './UploadForm.js';
 import PlayerContainer from './../../containers/PlayerContainer.js';
 import Library from './Library.js';
 
-const songs = ["song1.xm", "song2.xm", "song3.xm"];
+let songs =fetch('http://localhost:8000/api/songs/songnames/').then(
+  function (response) {
+    console.log(response);
+    return response;
+  }
+)
+
+console.log(songs);
 let currentSong = songs[0];
+
 
 class App extends Component {
   constructor (props) {

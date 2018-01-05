@@ -1,20 +1,44 @@
 import React, { Component } from 'react';
 
 
-  function sendFormData(data) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', 'http://localhost:8000/api/songs/upload', true);
-    xmlhttp.setRequestHeader('Content-type', 'text/plain');
-    xmlhttp.send(data);
-  }
 class UploadForm extends Component {
 
 
-  handleSubmit(event) {
-    //let data = document.getElementById('songUpload').value;
-    event.preventDefault();
-    sendFormData();
-  }
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.upload = this.upload.bind(this);
+  };
+  upload(file) {
+		console.log(this.fileInput);
+		var formData = new FormData();
+		formData.append('songFile', file);
+		console.log(file);
+		console.log(formData);
+    fetch('/api/songs/upload', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "multipart/form-data"
+      },
+      body: file
+    }).then(
+      response => response.json()
+    ).then(
+      success => console.log(success),
+    ).catch(
+      error => console.log(error),
+    );
+  };
+
+
+  handleSubmit(files) {
+    files.preventDefault();
+    const file = this.fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.readAsText(file);
+		reader.onloadend = () => this.upload(reader.result);
+  };
 
 	render () {
 		return (
@@ -25,7 +49,7 @@ class UploadForm extends Component {
             <div class="flex-row">
             <div class="btn">
               <span>File</span>
-              <input type="file" multiple />
+              <input ref={(input) => { this.fileInput = input; }} type="file" multiple />
             </div>
             <div style={{width: "100%", paddingRight: "10px"}}class="file-path-wrapper">
               <input class="file-path validate" type="text" placeholder="Upload one or more files" />
