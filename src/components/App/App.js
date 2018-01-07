@@ -4,26 +4,27 @@ import UploadForm from './UploadForm.js';
 import PlayerContainer from './../../containers/PlayerContainer.js';
 import Library from './Library.js';
 
-let songs =fetch('http://localhost:8000/api/songs/songnames/').then(
-  function (response) {
-    console.log(response);
-    return response;
-  }
-)
-
-console.log(songs);
-let currentSong = songs[0];
-
-
 class App extends Component {
   constructor (props) {
     super(props);
+    this.assignSongs();
     this.setSongFromPlayer = this.setSongFromPlayer.bind(this);
     this.setSongFromLibrary = this.setSongFromLibrary.bind(this);
+    this.setState = this.setState.bind(this);
     this.state = {
-      currentSong: currentSong,
-      songs: songs,
+      songs: this.assignSongs(),
+      currentSong: "song"
     }
+  }
+
+  async assignSongs (songs) {
+    fetch('http://localhost:8000/api/songs/songnames/').then(
+      function (response) {
+        response.json().then(function(data) {
+          return data;
+        });
+      }
+    )
   }
 
   setSongFromLibrary (newSong) {
