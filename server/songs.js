@@ -5,10 +5,14 @@ const router = require('express').Router()
 const Busboy = require('busboy');
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('reactxmplayer', 'postgres', null, {
+/*
+const sequelize = new Sequelize('reactxmplayer', 'matt', 'pass', {
   host: 'localhost',
   dialect: 'postgres',
 });
+*/
+
+const sequelize = new Sequelize('postgres://matt@localhost/reactxmplayer', {});
 
 router.get('/songnames', function(req, res) {
   let data = [];
