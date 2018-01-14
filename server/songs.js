@@ -16,12 +16,15 @@ const sequelize = new Sequelize('reactxmplayer', 'matt', 'pass', {
 const sequelize = new Sequelize('postgres://matt@localhost/reactxmplayer', {});
 
 router.get('/songnames', function(req, res) {
-  let data = [];
   sequelize
     .authenticate()
     .then(() => {
       SongsModel.findAll().then(songs => {
-        res.send(songs);
+        if (songs) {
+          res.send(songs);
+        } else {
+          res.send(null);
+        };
       });
     });
 })
@@ -47,8 +50,8 @@ router.post('/upload', function(req, res) {
       return SongsModel.create({
         fileName: req.body.name,
       });
-
     })
+    .then(() => res.send(JSON.stringify('Uploaded ' + req.body.name)))
     .catch(err => {
       console.error('Unable to connect to the database:', err);
     });

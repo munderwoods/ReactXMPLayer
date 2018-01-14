@@ -7,30 +7,6 @@ class UploadForm extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.upload = this.upload.bind(this);
-  };
-
-  upload(fileData, fileObj) {
-    console.log(fileObj);
-    console.log(fileObj.name);
-		console.log(this.fileInput);
-		var formData = new FormData();
-		formData.append('songFile', fileObj);
-		console.log(fileData);
-		console.log(formData);
-    fetch('/api/songs/upload', {
-      method: 'POST',
-      body: JSON.stringify({name: fileObj.name}),
-      headers: {
-        "Content-Type": "text/plain"
-      },
-    }).then(
-      response => response.json()
-    ).then(
-      success => console.log(success),
-    ).catch(
-      error => console.log(error),
-    );
   };
 
 
@@ -38,9 +14,8 @@ class UploadForm extends Component {
     files.preventDefault();
     const file = this.fileInput.files[0];
     const reader = new FileReader();
-    console.log(reader);
     reader.readAsText(file);
-		reader.onloadend = () => this.upload(reader.result, file);
+		reader.onloadend = () => this.props.upload(reader.result, file);
   };
 
 	render () {

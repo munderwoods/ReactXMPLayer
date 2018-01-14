@@ -12,6 +12,7 @@ class App extends Component {
     this.deleteSong = this.deleteSong.bind(this);
     this.setSongFromLibrary = this.setSongFromLibrary.bind(this);
     this.setState = this.setState.bind(this);
+    this.upload = this.upload.bind(this);
     this.state = {
       songs: null,
       currentSong: null
@@ -21,6 +22,27 @@ class App extends Component {
   componentDidMount() {
     this.assignSongs()
   }
+
+
+  upload(fileData, fileObj) {
+		var formData = new FormData();
+		formData.append('songFile', fileObj);
+    fetch('/api/songs/upload', {
+      method: 'POST',
+      body: JSON.stringify({name: fileObj.name}),
+      headers: {
+        "Content-Type": "text/plain"
+      },
+    }).then(
+      response => response.json()
+    ).then(
+      () => this.assignSongs()
+    ).then(
+      success => console.log(success),
+    ).catch(
+      error => console.log(error),
+    );
+  };
 
   deleteSong(songId) {
     console.log(songId);
@@ -45,17 +67,22 @@ class App extends Component {
   assignSongs (songs) {
     fetch('http://localhost:8000/api/songs/songnames/')
       .then(r => r.json())
-      .then(data => this.setState({songs: data, currentSong: data[0].fileName}));
+      .then(data => {
+        console.log(data)
+        if (data.length !== 0) {
+          this.setState({songs: data, currentSong: data[0].fileName})
+        } else {
+          this.setState({songs: null, currentSong: null})
+        }
+      })
   }
 
   setSongFromLibrary (newSong) {
     this.setState({currentSong: newSong});
-    console.log(this.state);
   }
 
   setSongFromPlayer(newSong) {
     this.setState({currentSong: newSong});
-    console.log(this.state.currentSong);
   }
 
   render() {
@@ -68,7 +95,7 @@ class App extends Component {
         <br />
         <Library deleteSong={this.deleteSong} setSongFromLibrary= {this.setSongFromLibrary} songs={this.state.songs}/>
         <br />
-        <UploadForm />
+        <UploadForm upload={this.upload}/>
 				</div>
         </div>
       </div>

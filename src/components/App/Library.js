@@ -25,10 +25,17 @@ class Library extends Component {
 			<div>
         <h4>Pick A Song From The Library</h4>
         <ul
-          class="collection"
+          className="collection"
           style={{listStyle: 'none'}}>
-            {this.props.songs ? this.props.songs.map((song) => <ListItem song={song} clicked={this.clicked} deleteClick={this.deleteClick} />) : null}
-          </ul>
+            {this.props.songs ? this.props.songs.map((song) =>
+              <ListItem
+                key={song.id}
+                song={song}
+                clicked={this.clicked}
+                deleteClick={this.deleteClick}
+              />
+            ) : null}
+        </ul>
 			</div>
 		);
 	};
