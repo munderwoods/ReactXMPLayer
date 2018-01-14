@@ -14,7 +14,7 @@ app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:htt
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 //json parser
-app.use(bodyParser.json())
+app.use(bodyParser.json({ type: 'text/plain'}))
 // Serve static assets
 
 

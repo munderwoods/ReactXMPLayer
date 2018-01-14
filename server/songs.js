@@ -3,6 +3,7 @@ const SongsModel = require('../db/models/songs');
 
 const router = require('express').Router()
 const Busboy = require('busboy');
+const bodyParser = ('body-parser');
 
 const Sequelize = require('sequelize');
 /*
@@ -25,21 +26,26 @@ router.get('/songnames', function(req, res) {
     });
 })
 
+router.post('/delete', function(req, res) {
+  sequelize
+    .authenticate()
+    .then(() => {
+      SongsModel.destroy({
+        where: {
+          id: req.body.id
+        }
+      })
+    })
+    .then(() => res.send(JSON.stringify('Deleted ID# ' + req.body.id)))
+});
+
 router.post('/upload', function(req, res) {
-	const busboy = new Busboy({headers: req.headers });
-	busboy.on('file', function(file, filename,) {
-		console.log(file, filename);
-	});
-	busboy.on('finish', function() {
-		console.log(file, filename)
-	});
-  console.log(req.files);
 	console.log(req.body);
   sequelize
     .authenticate()
     .then(() => {
       return SongsModel.create({
-        fileName: req.files[0],
+        fileName: req.body.name,
       });
 
     })

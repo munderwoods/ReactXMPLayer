@@ -9,18 +9,21 @@ class UploadForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.upload = this.upload.bind(this);
   };
-  upload(file) {
+
+  upload(fileData, fileObj) {
+    console.log(fileObj);
+    console.log(fileObj.name);
 		console.log(this.fileInput);
 		var formData = new FormData();
-		formData.append('songFile', file);
-		console.log(file);
+		formData.append('songFile', fileObj);
+		console.log(fileData);
 		console.log(formData);
     fetch('/api/songs/upload', {
       method: 'POST',
+      body: JSON.stringify({name: fileObj.name}),
       headers: {
-        "Content-Type": "multipart/form-data"
+        "Content-Type": "text/plain"
       },
-      body: file
     }).then(
       response => response.json()
     ).then(
@@ -35,9 +38,9 @@ class UploadForm extends Component {
     files.preventDefault();
     const file = this.fileInput.files[0];
     const reader = new FileReader();
-
+    console.log(reader);
     reader.readAsText(file);
-		reader.onloadend = () => this.upload(reader.result);
+		reader.onloadend = () => this.upload(reader.result, file);
   };
 
 	render () {

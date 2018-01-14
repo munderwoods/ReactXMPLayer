@@ -1,28 +1,18 @@
 import React, { Component } from 'react';
-
+import ListItem from './ListItem.js';
 
 
 class Library extends Component {
 
-  logSongs() {
-    console.log(this.props.songs)
+  constructor(props) {
+    super(props);
+    this.clicked = this.clicked.bind(this);
+    this.deleteClick = this.deleteClick.bind(this);
   }
 
-  //listItems = this.props.songs.map((song) =>
- //   <li class="flex-row" key={song.fileName}>
-//			<a style={{width: '100%'}}class="collection-item"
-//				href="/songListItem/"
-//				onClick={this.clicked.bind(this)}
-//				>{song.fileName}
-//			</a>
-//			<button
-//				style={{
-//					float: 'right'}}
-//				class="waves-effect waves-lite btn">
-//					<i class="material-icons center">delete_forever</i>
-//			</button>
-//		</li>
- // );
+  deleteClick(event, songId) {
+    this.props.deleteSong(songId);
+  }
 
   clicked(event) {
     event.preventDefault();
@@ -33,12 +23,16 @@ class Library extends Component {
 	render () {
 		return (
 			<div>
-        <h6>{this.logSongs()}</h6>
         <h4>Pick A Song From The Library</h4>
-        <ul class="collection" style={{listStyle: 'none'}}>{this.listItems}</ul>
+        <ul
+          class="collection"
+          style={{listStyle: 'none'}}>
+            {this.props.songs ? this.props.songs.map((song) => <ListItem song={song} clicked={this.clicked} deleteClick={this.deleteClick} />) : null}
+          </ul>
 			</div>
 		);
 	};
+
 }
 
 export default Library;
