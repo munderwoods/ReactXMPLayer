@@ -39,11 +39,16 @@ router.post('/delete', function(req, res) {
         }
       })
     })
-    .then(() => res.send(JSON.stringify('Deleted ID# ' + req.body.id)))
+    .then(() => {
+      console.log(req.body.id);
+      res.send(JSON.stringify(req.body.id))
+    })
+    .catch(err => {
+      console.error('Unable to connect to the database:', err);
+    });
 });
 
 router.post('/upload', function(req, res) {
-	console.log(req.body);
   sequelize
     .authenticate()
     .then(() => {
@@ -51,7 +56,7 @@ router.post('/upload', function(req, res) {
         fileName: req.body.name,
       });
     })
-    .then(() => res.send(JSON.stringify('Uploaded ' + req.body.name)))
+    .then((sqlres) =>res.send(JSON.stringify(sqlres)))
     .catch(err => {
       console.error('Unable to connect to the database:', err);
     });

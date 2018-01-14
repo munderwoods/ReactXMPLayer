@@ -36,9 +36,7 @@ class App extends Component {
     }).then(
       response => response.json()
     ).then(
-      () => this.assignSongs()
-    ).then(
-      success => console.log(success),
+      song => this.appendSong(song)
     ).catch(
       error => console.log(error),
     );
@@ -55,14 +53,29 @@ class App extends Component {
     }).then(
       response => response.json()
     ).then(
-      success => console.log(success),
-    ).then(
-      this.assignSongs()
+      responseId => this.removeSong(responseId)
     ).catch(
       error => console.log(error),
     );
   };
 
+  removeSong(id) {
+    console.log(id);
+    const songs = this.state.songs;
+    const newSongs = songs.filter(song => song.id !== id);
+    this.setState(
+      {songs: newSongs}
+    );
+  }
+
+  appendSong(song) {
+    const songs = this.state.songs;
+    this.setState(
+      {songs: [ ...songs || [],
+      song
+      ]}
+    );
+  }
 
   assignSongs (songs) {
     fetch('http://localhost:8000/api/songs/songnames/')
