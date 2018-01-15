@@ -15,7 +15,8 @@ class App extends Component {
     this.upload = this.upload.bind(this);
     this.state = {
       songs: null,
-      currentSong: null
+      currentSong: null,
+      currentSongTitle: null,
     }
   }
 
@@ -83,19 +84,21 @@ class App extends Component {
       .then(data => {
         console.log(data)
         if (data.length !== 0) {
-          this.setState({songs: data, currentSong: data[0].fileName})
+          this.setState({songs: data, currentSong: [data[0].fileName, data[0].id], currentSongTitle: data[0].fileName})
         } else {
-          this.setState({songs: null, currentSong: null})
+          this.setState({songs: null, currentSong: null, currentSongTitle: null})
         }
       })
   }
 
-  setSongFromLibrary (newSong) {
-    this.setState({currentSong: newSong});
+  setSongFromLibrary (songId) {
+    const songObj = this.state.songs.find(i => i.id === songId);
+    const newSong = [songObj.fileName, songObj.id];
+    this.setState({currentSong: newSong, currentSongTitle: newSong[0]});
   }
 
   setSongFromPlayer(newSong) {
-    this.setState({currentSong: newSong});
+    this.setState({currentSong: newSong, currentSongTitle: newSong[0]});
   }
 
   render() {
@@ -104,7 +107,7 @@ class App extends Component {
           <div class="z-depth-2">
 				<div style={{padding: '5%'}}>
         <h1>Play A Jam!</h1>
-        <PlayerContainer currentSong={this.state.currentSong} songs={this.state.songs} setSongFromPlayer={this.setSongFromPlayer}/>
+        <PlayerContainer currentSongTitle={this.state.currentSongTitle} currentSong={this.state.currentSong} songs={this.state.songs} setSongFromPlayer={this.setSongFromPlayer}/>
         <br />
         <Library deleteSong={this.deleteSong} setSongFromLibrary= {this.setSongFromLibrary} songs={this.state.songs}/>
         <br />

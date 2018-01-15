@@ -30,7 +30,7 @@ class UploadForm extends Component {
               <input ref={(input) => { this.fileInput = input; }} type="file" multiple />
             </div>
             <div style={{width: "100%", paddingRight: "10px"}}class="file-path-wrapper">
-              <input class="file-path validate" type="text" placeholder="Upload one or more files" />
+              <input class="file-path validate" type="text" placeholder="Choose a .xm file" />
             </div>
 							<button class="btn waves-effect waves-light" type="submit" name="action">Submit
 								<i class="material-icons right">send</i>

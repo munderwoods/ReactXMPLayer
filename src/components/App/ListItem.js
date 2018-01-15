@@ -8,7 +8,7 @@ class ListItem extends Component {
         <li className="flex-row" key={this.props.song.id}>
           <a style={{width: '100%'}} className="collection-item"
             href="/songListItem/"
-            onClick={this.props.clicked.bind(this)}
+            onClick={(event) => this.props.clicked(event, this.props.song.id)}
             >{this.props.song.fileName}
           </a>
           <button

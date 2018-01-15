@@ -14,10 +14,10 @@ class Library extends Component {
     this.props.deleteSong(songId);
   }
 
-  clicked(event) {
+  clicked(event, songId) {
     event.preventDefault();
-    let newSong = event.target.textContent;
-    this.props.setSongFromLibrary(newSong);
+    console.log(songId);
+    this.props.setSongFromLibrary(songId);
   }
 
 	render () {
