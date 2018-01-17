@@ -3,6 +3,8 @@ import './style.css';
 import UploadForm from './UploadForm.js';
 import PlayerContainer from './../../containers/PlayerContainer.js';
 import Library from './Library.js';
+import DropZone from 'react-dropzone';
+import upload from 'superagent';
 
 class App extends Component {
   constructor (props) {
@@ -26,21 +28,28 @@ class App extends Component {
 
 
   upload(fileData, fileObj) {
-		var formData = new FormData();
-		formData.append('songFile', fileObj);
-    fetch('/api/songs/upload', {
-      method: 'POST',
-      body: JSON.stringify({name: fileObj.name}),
-      headers: {
-        "Content-Type": "text/plain"
-      },
-    }).then(
-      response => response.json()
-    ).then(
-      song => this.appendSong(song)
-    ).catch(
-      error => console.log(error),
-    );
+    upload.post('/api/songs/upload')
+    .attach('song', fileObj)
+    .end((err, res) => {
+      if (err) console.log(err);
+      console.log('File Uploaded!');
+    })
+    //console.log(fileObj);
+		//var formData = new FormData();
+		//formData.append('songFile', fileObj);
+    //fetch('/api/songs/upload', {
+    //  method: 'POST',
+    //  body: JSON.stringify({name: fileObj.name, file: fileData,}),
+    //  headers: {
+    //    "Content-Type": "text/plain"
+    //  },
+    //}).then(
+    //  response => response.json()
+    //).then(
+    //  song => this.appendSong(song)
+    //).catch(
+    //  error => console.log(error),
+    //);
   };
 
   deleteSong(songId) {
