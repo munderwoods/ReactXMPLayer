@@ -10,8 +10,8 @@ class Library extends Component {
     this.deleteClick = this.deleteClick.bind(this);
   }
 
-  deleteClick(event, songId) {
-    this.props.deleteSong(songId);
+  deleteClick(event, songId, songName) {
+    this.props.deleteSong(songId, songName);
   }
 
   clicked(event, songId) {

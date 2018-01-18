@@ -3,7 +3,6 @@ import './style.css';
 import UploadForm from './UploadForm.js';
 import PlayerContainer from './../../containers/PlayerContainer.js';
 import Library from './Library.js';
-import DropZone from 'react-dropzone';
 import upload from 'superagent';
 
 class App extends Component {
@@ -30,33 +29,17 @@ class App extends Component {
   upload(fileData, fileObj) {
     upload.post('/api/songs/upload')
     .attach('song', fileObj)
-    .end((err, res) => {
-      if (err) console.log(err);
-      console.log('File Uploaded!');
-    })
-    //console.log(fileObj);
-		//var formData = new FormData();
-		//formData.append('songFile', fileObj);
-    //fetch('/api/songs/upload', {
-    //  method: 'POST',
-    //  body: JSON.stringify({name: fileObj.name, file: fileData,}),
-    //  headers: {
-    //    "Content-Type": "text/plain"
-    //  },
-    //}).then(
-    //  response => response.json()
-    //).then(
-    //  song => this.appendSong(song)
-    //).catch(
-    //  error => console.log(error),
-    //);
-  };
+    .then(response => JSON.parse(response.text))
+    .then(song => this.appendSong(song))
+    .catch(error => console.log(error))
+  }
 
-  deleteSong(songId) {
+  deleteSong(songId, songName) {
+    console.log(songName);
     console.log(songId);
     fetch('http://localhost:8000/api/songs/delete/', {
       method: 'POST',
-      body: JSON.stringify({"id": songId}),
+      body: JSON.stringify({"id": songId, "fileName": songName}),
       headers: {
         "Content-Type": "text/plain"
       },
@@ -113,7 +96,7 @@ class App extends Component {
   render() {
     return (
       <div class="col s12 m2" className = "App">
-          <div class="z-depth-2">
+          <div className="z-depth-2">
 				<div style={{padding: '5%'}}>
         <h1>Play A Jam!</h1>
         <PlayerContainer currentSongTitle={this.state.currentSongTitle} currentSong={this.state.currentSong} songs={this.state.songs} setSongFromPlayer={this.setSongFromPlayer}/>

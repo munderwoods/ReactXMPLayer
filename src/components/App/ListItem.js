@@ -12,7 +12,7 @@ class ListItem extends Component {
             >{this.props.song.fileName}
           </a>
           <button
-            onClick={(event) => this.props.deleteClick(event, this.props.song.id)}
+            onClick={(event) => this.props.deleteClick(event, this.props.song.id, this.props.song.fileName)}
             style={{
               float: 'right'
             }}

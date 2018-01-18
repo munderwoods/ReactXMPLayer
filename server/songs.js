@@ -36,6 +36,11 @@ router.get('/songnames', function(req, res) {
 })
 
 router.post('/delete', function(req, res) {
+  const params = {
+    Bucket: "reactxmplayer",
+    Key: JSON.stringify(req.body.id) + req.body.fileName,
+  };
+  console.log(params);
   sequelize
     .authenticate()
     .then(() => {
@@ -52,6 +57,10 @@ router.post('/delete', function(req, res) {
     .catch(err => {
       console.error('Unable to connect to the database:', err);
     });
+  s3.deleteObject(params, function(err, data) {
+    if (err) console.log(err, err.stack);
+    else console.log(data);
+  })
 });
 
 router.post('/upload', upload.single('song'), (req, res) => {
@@ -63,39 +72,22 @@ router.post('/upload', upload.single('song'), (req, res) => {
         fileName: req.file.originalname,
       });
     })
-      .then((sqlres) => {
-        sqlid = sqlres.id;
-        res.send(JSON.stringify(sqlres))
+    .then((sqlres) => {
+      sqlid = sqlres.id;
+      return JSON.stringify(sqlres)
+    })
+    .then((sqlString) => {
+      s3.putObject({
+        Bucket: 'reactxmplayer',
+        Key: sqlid + req.file.originalname,
+        Body: req.file.buffer,
+        ACL: 'public-read',
+      }, (err) => {
+        if (err) return res.status(400).send(err);
+        res.send(sqlString);
       })
-      .then(() => {
-        s3.putObject({
-          Bucket: 'reactxmplayer',
-          Key: sqlid + req.file.originalname,
-          Body: req.file.buffer,
-          ACL: 'public-read',
-        }, (err) => {
-          if (err) return res.status(400).send(err);
-          res.send('File uploaded to S3');
-        }
-        )
-      })
+    })
 });
-  //const file = req.body;
-  //sequelize
-  //  .authenticate()
-  //  .then(() => {
-  //    return SongsModel.create({
-  //      fileName: req.body.name,
-  //    });
-  //  })
-  //  .then((sqlres) =>{
-  //    res.send(JSON.stringify(sqlres));
-  //    console.log(file);
-  //  })
-  //  .catch(err => {
-  //    console.error('Unable to connect to the database:', err);
-  //  });
-//});
 
 
 module.exports = router
