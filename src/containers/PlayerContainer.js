@@ -15,7 +15,7 @@ class PlayerContainer extends Component {
 
   play() {
     XMPlayer.autostart = true;
-    XMPlayer.load('http://localhost:3000/songs/Ota.xm');
+    XMPlayer.load('https://s3-us-west-1.amazonaws.com/reactxmplayer/' + encodeURI(this.props.currentSong[1] + this.props.currentSong[0]));
   }
 
   stop() {
