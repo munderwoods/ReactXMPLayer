@@ -11,8 +11,8 @@ const sequelize = new Sequelize('postgres://matt@localhost/reactxmplayer', {});
 const s3 = new AWS.S3();
 AWS.config.update(
   {
-    acessKeyId: 'AKIAI5YIXD65G4VGIP4Q',
-    secretAccessKey: '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',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     subregion: 'us-east-1',
   });
 

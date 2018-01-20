@@ -15,6 +15,7 @@ class App extends Component {
     this.setState = this.setState.bind(this);
     this.upload = this.upload.bind(this);
     this.state = {
+      playing: false,
       songs: null,
       currentSong: null,
       currentSongTitle: null,

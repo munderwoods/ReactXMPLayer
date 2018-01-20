@@ -23,6 +23,7 @@ class PlayerContainer extends Component {
   }
 
   previous() {
+    XMPlayer.stop();
     const index = this.props.songs.findIndex(i => i.id === this.props.currentSong[1]);
     if (index === 0) {
       let newSong = this.props.songs[this.props.songs.length - 1];
@@ -34,6 +35,7 @@ class PlayerContainer extends Component {
   }
 
   next() {
+    XMPlayer.stop();
     const index = this.props.songs.findIndex(i => i.id === this.props.currentSong[1]);
     if (index === this.props.songs.length - 1) {
       let newSong = this.props.songs[0];
