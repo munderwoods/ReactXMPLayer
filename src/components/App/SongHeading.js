@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class SongHeading extends Component {
-  render() {
-    return (
-      <h3>Now Playing {this.props.title}</h3>
-    );
-  }
+function SongHeading({ title }) {
+  return (
+    <h3>Now Playing {title}</h3>
+  );
 }
 
 export default SongHeading;

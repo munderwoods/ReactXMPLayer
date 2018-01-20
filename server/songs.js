@@ -9,17 +9,18 @@ const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize('postgres://matt@localhost/reactxmplayer', {});
 const s3 = new AWS.S3();
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {fileSize: 52428800 },
+});
+
 AWS.config.update(
   {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     subregion: 'us-east-1',
   });
-
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: {fileSize: 52428800 },
-});
 
 router.get('/songnames', function(req, res) {
   sequelize
@@ -40,7 +41,6 @@ router.post('/delete', function(req, res) {
     Bucket: "reactxmplayer",
     Key: JSON.stringify(req.body.id) + req.body.fileName,
   };
-  console.log(params);
   sequelize
     .authenticate()
     .then(() => {
@@ -64,7 +64,7 @@ router.post('/delete', function(req, res) {
 });
 
 router.post('/upload', upload.single('song'), (req, res) => {
-  let sqlid = 0;
+  let sqlid = null;
   sequelize
     .authenticate()
     .then(() => {

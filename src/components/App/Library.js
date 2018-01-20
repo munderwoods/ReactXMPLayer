@@ -16,7 +16,6 @@ class Library extends Component {
 
   clicked(event, songId) {
     event.preventDefault();
-    console.log(songId);
     this.props.setSongFromLibrary(songId);
   }
 

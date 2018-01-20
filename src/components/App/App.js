@@ -27,7 +27,7 @@ class App extends Component {
   }
 
 
-  upload(fileData, fileObj) {
+  upload(fileObj) {
     upload.post('/api/songs/upload')
     .attach('song', fileObj)
     .then(response => JSON.parse(response.text))
@@ -36,9 +36,7 @@ class App extends Component {
   }
 
   deleteSong(songId, songName) {
-    console.log(songName);
-    console.log(songId);
-    fetch('http://localhost:8000/api/songs/delete/', {
+    fetch('/api/songs/delete/', {
       method: 'POST',
       body: JSON.stringify({"id": songId, "fileName": songName}),
       headers: {
@@ -54,7 +52,6 @@ class App extends Component {
   };
 
   removeSong(id) {
-    console.log(id);
     const songs = this.state.songs;
     const newSongs = songs.filter(song => song.id !== id);
     this.setState(
@@ -72,10 +69,9 @@ class App extends Component {
   }
 
   assignSongs (songs) {
-    fetch('http://localhost:8000/api/songs/songnames/')
+    fetch('/api/songs/songnames/')
       .then(r => r.json())
       .then(data => {
-        console.log(data)
         if (data.length !== 0) {
           this.setState({songs: data, currentSong: [data[0].fileName, data[0].id], currentSongTitle: data[0].fileName})
         } else {
@@ -86,8 +82,7 @@ class App extends Component {
 
   setSongFromLibrary (songId) {
     const songObj = this.state.songs.find(i => i.id === songId);
-    const newSong = [songObj.fileName, songObj.id];
-    this.setState({currentSong: newSong, currentSongTitle: newSong[0]});
+    this.setState({currentSong: [songObj.fileName, songObj.id], currentSongTitle: songObj.fileName});
   }
 
   setSongFromPlayer(newSong) {
@@ -96,16 +91,16 @@ class App extends Component {
 
   render() {
     return (
-      <div class="col s12 m2" className = "App">
-          <div className="z-depth-2">
-				<div style={{padding: '5%'}}>
-        <h1>Play A Jam!</h1>
-        <PlayerContainer currentSongTitle={this.state.currentSongTitle} currentSong={this.state.currentSong} songs={this.state.songs} setSongFromPlayer={this.setSongFromPlayer}/>
-        <br />
-        <Library deleteSong={this.deleteSong} setSongFromLibrary= {this.setSongFromLibrary} songs={this.state.songs}/>
-        <br />
-        <UploadForm upload={this.upload}/>
-				</div>
+      <div className = "App">
+        <div className="z-depth-2">
+			   	<div className="col s12 m2" style={{padding: '5%'}}>
+           <h1>Play A Jam!</h1>
+           <PlayerContainer currentSongTitle={this.state.currentSongTitle} currentSong={this.state.currentSong} songs={this.state.songs} setSongFromPlayer={this.setSongFromPlayer}/>
+           <br />
+           <Library deleteSong={this.deleteSong} setSongFromLibrary= {this.setSongFromLibrary} songs={this.state.songs}/>
+           <br />
+           <UploadForm upload={this.upload}/>
+				  </div>
         </div>
       </div>
     );
