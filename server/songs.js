@@ -74,6 +74,7 @@ router.post('/upload', upload.single('song'), (req, res) => {
     })
     .then((sqlres) => {
       sqlid = sqlres.id;
+    console.log(AWS.config);
       return JSON.stringify(sqlres)
     })
     .then((sqlString) => {
