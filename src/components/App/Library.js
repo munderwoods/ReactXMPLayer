@@ -22,7 +22,7 @@ class Library extends Component {
 	render () {
 		return (
 			<div>
-        <h4>Pick A Song From The Library</h4>
+        <h4>Load A Song From The Library</h4>
         <ul
           className="collection"
           style={{listStyle: 'none'}}>

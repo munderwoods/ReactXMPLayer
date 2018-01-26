@@ -2,7 +2,7 @@ import React from 'react';
 
 function SongHeading({ title }) {
   return (
-    <h3>Now Playing {title}</h3>
+    <h3>Currently Loaded: {title}</h3>
   );
 }
 

@@ -7,13 +7,29 @@ const bodyParser = ('body-parser');
 const multer = require('multer');
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('postgres://matt@localhost/reactxmplayer', {});
+const sequelize = new Sequelize('postgres://dsnrafzmgyrabq:8c8447719e84d931202389d99a8a06854faa353e8a1f321a8ae6cc436c90ff97@ec2-54-225-230-142.compute-1.amazonaws.com:5432/dcru3dkvq749re', {});
 const s3 = new AWS.S3();
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {fileSize: 52428800 },
 });
+
+function fileFilter (req, file, cb) {
+
+  // The function should call `cb` with a boolean
+  // to indicate if the file should be accepted
+
+  // To reject this file pass `false`, like so:
+  cb(null, false)
+
+  // To accept the file pass `true`, like so:
+  cb(null, true)
+
+  // You can always pass an error if something goes wrong:
+  cb(new Error('I don\'t have a clue!'))
+
+}
 
 AWS.config.update(
   {
