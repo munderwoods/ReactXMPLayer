@@ -101,7 +101,7 @@ class App extends Component {
            <br />
            <UploadForm upload={this.upload}/>
            <br />
-           <h5>This is an XM player built by Matthew S Underwood. XM files are used by the chiptune sequencer Fasttracker 2, or its modern equivalent, MilkyTracker. They are binary files and as such are extremely small and are well suited in sountracking videogames. The songs are supposed to loop infinitely and as such this application doesn't function quite as you'd expect from a more standard music player.</h5>
+           <h5>This is an XM player built by Matthew S Underwood. XM files are used by the chiptune sequencer Fasttracker 2, or its modern equivalent, MilkyTracker. They are binary files and as such are extremely small and are well suited to sountracking videogames. The songs are supposed to loop infinitely and as such this application doesn't function quite as you'd expect from a more standard music player.</h5>
 				  </div>
         </div>
       </div>
