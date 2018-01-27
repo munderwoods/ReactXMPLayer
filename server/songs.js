@@ -79,31 +79,40 @@ router.post('/delete', function(req, res) {
   })
 });
 
+function fileFilter(file) {
+    if (!file.originalname.match(/\.(xm)$/)) {
+        return false;
+    }
+		return true;
+}
+
 router.post('/upload', upload.single('song'), (req, res) => {
-  let sqlid = null;
-  sequelize
-    .authenticate()
-    .then(() => {
-      return SongsModel.create({
-        fileName: req.file.originalname,
-      });
-    })
-    .then((sqlres) => {
-      sqlid = sqlres.id;
-    console.log(AWS.config);
-      return JSON.stringify(sqlres)
-    })
-    .then((sqlString) => {
-      s3.putObject({
-        Bucket: 'reactxmplayer',
-        Key: sqlid + req.file.originalname,
-        Body: req.file.buffer,
-        ACL: 'public-read',
-      }, (err) => {
-        if (err) return res.status(400).send(err);
-        res.send(sqlString);
-      })
-    })
+	if (fileFilter(req.file)) {
+		let sqlid = null;
+		sequelize
+			.authenticate()
+			.then(() => {
+				return SongsModel.create({
+					fileName: req.file.originalname,
+				});
+			})
+			.then((sqlres) => {
+				sqlid = sqlres.id;
+			console.log(AWS.config);
+				return JSON.stringify(sqlres)
+			})
+			.then((sqlString) => {
+				s3.putObject({
+					Bucket: 'reactxmplayer',
+					Key: sqlid + req.file.originalname,
+					Body: req.file.buffer,
+					ACL: 'public-read',
+				}, (err) => {
+					if (err) return res.status(400).send(err);
+					res.send(sqlString);
+				})
+			})
+	}
 });
 
 
