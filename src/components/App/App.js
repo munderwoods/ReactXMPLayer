@@ -103,8 +103,11 @@ class App extends Component {
            <br />
            <h5>This is an XM player built by Matthew S Underwood. XM files are used by the chiptune sequencer Fasttracker 2, or its modern equivalent, MilkyTracker. They are binary files and as such are extremely small and are well suited to sountracking videogames. The songs are supposed to loop infinitely and as such this application doesn't function quite as you'd expect from a more standard music player. I'm going to include some permanent links to my AWS s3 bucket below that will allow you to download sample XM files that I made. This way you can test uploading and deleting them.</h5>
             <a href="https://s3-us-west-1.amazonaws.com/reactxmplayer/Kowloon.xm">Kowloon</a>
+            <br />
             <a href="https://s3-us-west-1.amazonaws.com/reactxmplayer/Ruins.xm">Ruins</a>
+            <br />
             <a href="https://s3-us-west-1.amazonaws.com/reactxmplayer/Surface.xm">Surface</a>
+            <br />
             <a href="https://s3-us-west-1.amazonaws.com/reactxmplayer/The+Chamber.xm">The Chamber</a>
 				  </div>
         </div>
