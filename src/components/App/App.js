@@ -93,7 +93,7 @@ class App extends Component {
     return (
       <div className = "App">
         <div className="z-depth-2">
-			   	<div className="col s12 m2" style={{padding: '5%'}}>
+			   	<div style={{padding: '5%'}}>
            <h1>Play A Jam!</h1>
            <PlayerContainer currentSongTitle={this.state.currentSongTitle} currentSong={this.state.currentSong} songs={this.state.songs} setSongFromPlayer={this.setSongFromPlayer}/>
            <br />
