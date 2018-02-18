@@ -16,8 +16,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 //json parser
 app.use(bodyParser.json({ type: 'text/plain'}))
 // Serve static assets
-
-
 app.use('/songs', express.static(path.resolve(__dirname, '..', 'public/songs')))
 app.use(express.static(path.resolve(__dirname, '..', 'build')))
 // Serve our api
